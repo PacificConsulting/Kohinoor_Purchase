@@ -15,12 +15,16 @@ pageextension 50071 "Purch. Order" extends "Purchase Order"
                 rec.TestField("Document Date");
             end;
         }
-        addafter(AttachAsPDF)
+        addafter("Post and &Print")
         {
             action("Send Mail")
             {
                 Caption = 'Send Mail';
                 Image = SendMail;
+                ApplicationArea = all;
+                Promoted = true;
+                PromotedIsBig = true;
+
                 trigger OnAction()
                 begin
                     IF Not Confirm('Do you want to send the mail', true) then
