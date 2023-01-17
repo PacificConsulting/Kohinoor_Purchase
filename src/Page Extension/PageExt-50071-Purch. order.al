@@ -7,14 +7,7 @@ pageextension 50071 "Purch. Order" extends "Purchase Order"
 
     actions
     {
-        modify(Release)
-        {
-            trigger OnBeforeAction()
-            begin
-                Rec.TestField("Vendor Invoice No.");
-                rec.TestField("Document Date");
-            end;
-        }
+        
         addafter("Post and &Print")
         {
             action("Send Mail")
