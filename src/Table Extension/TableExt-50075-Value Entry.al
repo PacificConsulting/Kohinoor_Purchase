@@ -1,8 +1,8 @@
-tableextension 50072 ReservEntryExt extends "Reservation Entry"
+tableextension 50075 ValueEntryExt extends "Value Entry"
 {
     fields
     {
-        field(50150; "Back Pack/Display"; Option)
+        field(50071; "Back Pack/Display"; Option)
         {
             OptionMembers = " ",Backpack,Display;
             OptionCaption = ' ,Backpack,Display';

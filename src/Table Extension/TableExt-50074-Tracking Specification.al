@@ -2,7 +2,7 @@ tableextension 50074 TrackSpecExt extends "Tracking Specification"
 {
     fields
     {
-        field(50150; "Back Pack/Display"; Option)
+        field(50071; "Back Pack/Display"; Option)
         {
             OptionMembers = " ",Backpack,Display;
             OptionCaption = ' ,Backpack,Display';

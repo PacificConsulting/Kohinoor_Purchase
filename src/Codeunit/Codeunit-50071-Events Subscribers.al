@@ -94,6 +94,31 @@ codeunit 50071 "Events Subscribers"
     end;
     //>>>>>>>END********************************CU-91*****************************************
 
+    //<<<<<<<START********************************Report-5753*****************************************
+    [EventSubscriber(ObjectType::Report, Report::"Get Source Documents", 'OnAfterCreateRcptHeader', '', false, false)]
+    local procedure OnAfterCreateRcptHeader(var WarehouseReceiptHeader: Record "Warehouse Receipt Header"; WarehouseRequest: Record "Warehouse Request"; PurchaseLine: Record "Purchase Line")
+    var
+        PurchaseHeader: Record 38;
+    begin
+        PurchaseHeader.reset;
+        PurchaseHeader.SetRange("No.", PurchaseLine."Document No.");
+        if PurchaseHeader.FindFirst() then begin
+            WarehouseReceiptHeader."Vendor Invoice No." := PurchaseHeader."Vendor Invoice No.";
+            WarehouseReceiptHeader."Vendor Invoice Date" := PurchaseHeader."Document Date";
+        end;
+    end;
+    //<<<<<<<END********************************Report-5753*****************************************
+
+    //<<<<<<<START********************************CU-90*****************************************
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePurchInvHeaderInsert', '', false, false)]
+    // local procedure OnBeforePurchInvHeaderInsert(var PurchInvHeader: Record "Purch. Inv. Header"; var PurchHeader: Record "Purchase Header"; CommitIsSupressed: Boolean)
+    // begin
+    //     PurchInvHeader.vendo
+    // end;
+
+    //<<<<<<<END********************************CU-90*****************************************
+
+
 
     var
         myInt: Integer;
