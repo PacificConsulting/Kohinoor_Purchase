@@ -2,9 +2,9 @@ codeunit 50071 "Events Subscribers"
 {
     trigger OnRun()
     begin
-
+        //PAGE-6510, CU-22,91
     end;
-
+    //<<<<<START********************************PAGE-6510*****************************************
     [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines", 'OnRegisterChangeOnChangeTypeInsertOnBeforeInsertReservEntry', '', false, false)]
     local procedure OnRegisterChangeOnChangeTypeInsertOnBeforeInsertReservEntry(var TrackingSpecification: Record "Tracking Specification"; var OldTrackingSpecification: Record "Tracking Specification"; var NewTrackingSpecification: Record "Tracking Specification"; FormRunMode: Option);
     var
@@ -43,18 +43,6 @@ codeunit 50071 "Events Subscribers"
         ReservEntry."Back Pack/Display" := TrkgSpec."Back Pack/Display";
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnSetupTempSplitItemJnlLineOnBeforeCalcPostItemJnlLine', '', false, false)]
-    local procedure OnSetupTempSplitItemJnlLineOnBeforeCalcPostItemJnlLine(var TempSplitItemJnlLine: Record "Item Journal Line"; TempTrackingSpecification: Record "Tracking Specification");
-    begin
-        TempSplitItemJnlLine."Back Pack/Display" := TempTrackingSpecification."Back Pack/Display";
-    end;
-
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnAfterInitItemLedgEntry', '', false, false)]
-    local procedure OnAfterInitItemLedgEntry(var NewItemLedgEntry: Record "Item Ledger Entry"; var ItemJournalLine: Record "Item Journal Line"; var ItemLedgEntryNo: Integer);
-    begin
-        NewItemLedgEntry."Back Pack/Display" := ItemJournalLine."Back Pack/Display";
-    end;
-
     [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines", 'OnBeforeAddToGlobalRecordSet', '', false, false)]
     local procedure OnBeforeAddToGlobalRecordSet(var TrackingSpecification: Record "Tracking Specification"; EntriesExist: Boolean; CurrentSignFactor: Integer; var TempTrackingSpecification: Record "Tracking Specification");
     Var
@@ -67,11 +55,45 @@ codeunit 50071 "Events Subscribers"
             TrackingSpecification."Back Pack/Display" := SellStatus;
     end;
 
+    //>>>>>>>>END********************************PAGE-6510*****************************************
+
+
+
+    //<<<<<<<START********************************CU-22*****************************************
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnSetupTempSplitItemJnlLineOnBeforeCalcPostItemJnlLine', '', false, false)]
+    local procedure OnSetupTempSplitItemJnlLineOnBeforeCalcPostItemJnlLine(var TempSplitItemJnlLine: Record "Item Journal Line"; TempTrackingSpecification: Record "Tracking Specification");
+    begin
+        TempSplitItemJnlLine."Back Pack/Display" := TempTrackingSpecification."Back Pack/Display";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnAfterInitItemLedgEntry', '', false, false)]
+    local procedure OnAfterInitItemLedgEntry(var NewItemLedgEntry: Record "Item Ledger Entry"; var ItemJournalLine: Record "Item Journal Line"; var ItemLedgEntryNo: Integer);
+    begin
+        NewItemLedgEntry."Back Pack/Display" := ItemJournalLine."Back Pack/Display";
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnInitValueEntryOnAfterAssignFields', '', false, false)]
     local procedure OnInitValueEntryOnAfterAssignFields(var ValueEntry: Record "Value Entry"; ItemLedgEntry: Record "Item Ledger Entry"; ItemJnlLine: Record "Item Journal Line");
     begin
         ValueEntry."Back Pack/Display" := ItemLedgEntry."Back Pack/Display";
     end;
+
+    //>>>>>>END********************************CU-22*****************************************
+
+
+    //<<<<<<<START********************************CU-91*****************************************
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeConfirmPost', '', false, false)]
+    local procedure OnBeforeConfirmPost(var PurchaseHeader: Record "Purchase Header"; var HideDialog: Boolean; var IsHandled: Boolean; var DefaultOption: Integer)
+    begin
+        DefaultOption := 1;
+        IF DefaultOption = 1 then begin
+            PurchaseHeader.TestField("Vendor Invoice No.");
+            PurchaseHeader.TestField("Document Date");
+        end;
+
+    end;
+    //>>>>>>>END********************************CU-91*****************************************
+
 
     var
         myInt: Integer;
