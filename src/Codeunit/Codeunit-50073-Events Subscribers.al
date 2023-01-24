@@ -78,4 +78,18 @@ codeunit 50073 Events
         end;
     end;
 
+    [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines", 'OnSelectEntriesOnAfterTransferFields', '', false, false)]
+    local procedure OnSelectEntriesOnAfterTransferFields(var TempTrackingSpec: Record "Tracking Specification"; var TrackingSpecification: Record "Tracking Specification");
+    var
+        ILE: Record 32;
+    begin
+        // ILE.RESET;
+        // ILE.SETRANGE("Lot No.", TrackingSpecification."Lot No.");
+        // IF ILE.FINDFIRST THEN BEGIN
+        //     TempTrackingSpec."Back Pack/Display" := ILE."Back Pack/Display";
+        //     //TempTrackingSpec.Modify();
+        // END;
+    end;
+
+
 }
