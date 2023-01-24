@@ -2,12 +2,18 @@ pageextension 50073 ItemTrackingLinesExt extends "Item Tracking Lines"
 {
     layout
     {
-        addafter("Expiration Date")
+        addafter("Lot No.")
         {
             field("Back Pack/Display"; Rec."Back Pack/Display")
             {
                 ApplicationArea = All;
             }
+
+
+        }
+        modify("Warranty Date")
+        {
+            Visible = true;
         }
         modify("Lot No.")
         {

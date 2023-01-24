@@ -5,6 +5,7 @@ codeunit 50071 "Events Subscribers"
         //PAGE-6510, CU-22,91
     end;
     //<<<<<START********************************PAGE-6510*****************************************
+
     [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines", 'OnRegisterChangeOnChangeTypeInsertOnBeforeInsertReservEntry', '', false, false)]
     local procedure OnRegisterChangeOnChangeTypeInsertOnBeforeInsertReservEntry(var TrackingSpecification: Record "Tracking Specification"; var OldTrackingSpecification: Record "Tracking Specification"; var NewTrackingSpecification: Record "Tracking Specification"; FormRunMode: Option);
     var
@@ -28,7 +29,7 @@ codeunit 50071 "Events Subscribers"
     [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines", 'OnAfterEntriesAreIdentical', '', false, false)]
     local procedure OnAfterEntriesAreIdentical(ReservEntry1: Record "Reservation Entry"; ReservEntry2: Record "Reservation Entry"; var IdenticalArray: array[2] of Boolean);
     begin
-        ReservEntry1."Back Pack/Display" := ReservEntry2."Back Pack/Display";
+        IdenticalArray[2] := IdenticalArray[2] And (ReservEntry1."Back Pack/Display" = ReservEntry2."Back Pack/Display")
     end;
 
     [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines", 'OnRegisterItemTrackingLinesOnAfterReclass', '', false, false)]
@@ -52,7 +53,7 @@ codeunit 50071 "Events Subscribers"
     begin
         sellstatus := CU50151.ExistingSellStatus(TrackingSpecification."Item No.", TrackingSpecification."Variant Code", ItemTrackingSetup, TrackingSpecification."Serial No.", False, EntriesExist);
         if SellStatus <> SellStatus::" " then
-            TrackingSpecification."Back Pack/Display" := SellStatus;
+            TrackingSpecification."Back Pack/Display" := sellstatus;
     end;
 
     //>>>>>>>>END********************************PAGE-6510*****************************************
@@ -107,6 +108,13 @@ codeunit 50071 "Events Subscribers"
             WarehouseReceiptHeader."Vendor Invoice Date" := PurchaseHeader."Document Date";
         end;
     end;
+
+    // //<<NSW07 231023
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Tracking Management", 'OnBeforeTempHandlingSpecificationInsert', '', false, false)]
+    // local procedure OnBeforeTempHandlingSpecificationInsert(var TempTrackingSpecification: Record "Tracking Specification" temporary; ReservationEntry: Record "Reservation Entry"; var ItemTrackingCode: Record "Item Tracking Code"; var EntriesExist: Boolean)
+    // begin
+    //     TempTrackingSpecification."Back Pack/Display" := ReservationEntry."Back Pack/Display";
+    // end;
     //<<<<<<<END********************************Report-5753*****************************************
 
     //<<<<<<<START********************************CU-90*****************************************
