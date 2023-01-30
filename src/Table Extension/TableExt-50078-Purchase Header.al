@@ -1,42 +1,19 @@
-pageextension 50071 "Purch. Order" extends "Purchase Order"
+tableextension 50078 "Purchase Header " extends "Purchase Header"
 {
-    layout
+    fields
     {
 
-    }
-
-    actions
-    {
-        
-        addafter("Post and &Print")
-        {
-            action("Send Mail")
-            {
-                Caption = 'Send Mail';
-                Image = SendMail;
-                ApplicationArea = all;
-                Promoted = true;
-                PromotedIsBig = true;
-
-                trigger OnAction()
-                begin
-                    IF Not Confirm('Do you want to send the mail', true) then
-                        exit;
-                    SendMail;
-                end;
-            }
-        }
     }
     procedure SendMail()
     begin
         PH.RESET;
         PH.SETRANGE("No.", Rec."No.");
         IF PH.FINDFIRST THEN;
-        IF recCust.GET(rec."Sell-to Customer No.") then;
+        IF recVend.GET(rec."Buy-from Vendor No.") then;
         Window.OPEN(
                      'Sending Mail              #1######\');
 
-        Emailmessage.Create(recCust."E-Mail", 'Purchase Order Details ' + PH."No.", '', true);
+        Emailmessage.Create(recVend."E-Mail", 'Purchase Order Details ' + PH."No.", '', true);
         Recref.GetTable(PH);
         TempBlob.CreateOutStream(OutStr);
         Report.SaveAs(Report::"Standard Purchase - Order", '', ReportFormat::Pdf, OutStr, Recref);
@@ -78,6 +55,8 @@ pageextension 50071 "Purch. Order" extends "Purchase Order"
         Window: Dialog;
         Char: Char;
         PH: Record 38;
-        recCust: Record 18;
+        recVend: Record Vendor;
         Recref: RecordRef;
+
+
 }

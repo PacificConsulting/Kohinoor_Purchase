@@ -40,8 +40,16 @@ codeunit 50073 Events
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnAfterInitItemLedgEntry', '', false, false)]
     local procedure OnAfterInitItemLedgEntry(var NewItemLedgEntry: Record "Item Ledger Entry"; var ItemJournalLine: Record "Item Journal Line"; var ItemLedgEntryNo: Integer);
+    var
+        RecItem: Record 27;
     begin
         NewItemLedgEntry."Back Pack/Display" := ItemJournalLine."Back Pack/Display";
+        //<<PCPL/NSW/07  CODE FOR OTHER REQUIRMENT TO FLOW NEW FIEL TO ILE
+        NewItemLedgEntry.Reset();
+        NewItemLedgEntry.SetRange("Item No.", RecItem."No.");
+        IF NewItemLedgEntry.FindFirst() then
+            NewItemLedgEntry."Item Status" := RecItem."Item Ststus";
+        //>>PCPL/NSW/07  CODE FOR OTHER REQUIRMENT TO FLOW NEW FIEL TO ILE
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnAfterInitValueEntry', '', false, false)]
@@ -77,19 +85,22 @@ codeunit 50073 Events
             WarehouseReceiptHeader."Vendor Invoice Date" := PurchaseHeader."Document Date";
         end;
     end;
-
-    [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines", 'OnSelectEntriesOnAfterTransferFields', '', false, false)]
-    local procedure OnSelectEntriesOnAfterTransferFields(var TempTrackingSpec: Record "Tracking Specification"; var TrackingSpecification: Record "Tracking Specification");
+    //<<<<<<<END********************************CU-415*****************************************
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnAfterReleasePurchaseDoc', '', false, false)]
+    local procedure OnAfterReleasePurchaseDoc(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; var LinesWereModified: Boolean)
     var
-        ILE: Record 32;
+        Vend: Record Vendor;
     begin
-        // ILE.RESET;
-        // ILE.SETRANGE("Lot No.", TrackingSpecification."Lot No.");
-        // IF ILE.FINDFIRST THEN BEGIN
-        //     TempTrackingSpec."Back Pack/Display" := ILE."Back Pack/Display";
-        //     //TempTrackingSpec.Modify();
-        // END;
-    end;
+        IF PurchaseHeader.Status = PurchaseHeader.Status::Released then begin
+            IF Vend.get(PurchaseHeader."Buy-from Vendor No.") then
+                if Vend."E-Mail" = '' then
+                    Message('Vendor Email is blank so system will not send the mail')
+                else
+                    IF Not Confirm('Do you want to send the mail', true) then
+                        exit;
+            PurchaseHeader.SendMail();
 
+        end;
+    end;
 
 }

@@ -7,6 +7,10 @@ tableextension 50071 ILEExt extends "Item Ledger Entry"
             OptionMembers = " ",Backpack,Display;
             OptionCaption = ' ,Backpack,Display';
         }
+        field(50072; "Item Status"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     var
