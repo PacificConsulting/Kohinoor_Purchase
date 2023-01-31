@@ -1,4 +1,4 @@
-pageextension 50075 "Warehouse Receipt" extends "Warehouse Receipt"
+pageextension 50204 "Warehouse Receipt" extends "Warehouse Receipt"
 {
     layout
     {

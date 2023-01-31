@@ -1,4 +1,4 @@
-page 50071 "Item Status List"
+page 50201 "Item Status List"
 {
     PageType = List;
     ApplicationArea = All;

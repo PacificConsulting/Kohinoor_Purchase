@@ -1,4 +1,4 @@
-xmlport 50071 "Purchase Order Upload"
+xmlport 50201 "Purchase Order Upload"
 {
     Direction = Import;
     FieldDelimiter = '<None>';

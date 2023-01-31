@@ -1,8 +1,8 @@
-tableextension 50074 TrackSpecExt extends "Tracking Specification"
+tableextension 50204 TrackSpecExt extends "Tracking Specification"
 {
     fields
     {
-        field(50071; "Back Pack/Display"; Option)
+        field(50201; "Back Pack/Display"; Option)
         {
             OptionMembers = " ",Backpack,Display;
             OptionCaption = ' ,Backpack,Display';
@@ -18,7 +18,7 @@ tableextension 50074 TrackSpecExt extends "Tracking Specification"
     procedure InitSellStatus()
     var
         SellStaus: Option;
-        CU50151: Codeunit 50072;
+        CU50151: Codeunit 50201;
         EntriesExist: Boolean;
         ItemTrackingSetup: Record "Item Tracking Setup";
     Begin

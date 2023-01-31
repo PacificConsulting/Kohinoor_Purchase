@@ -1,10 +1,10 @@
-pageextension 50076 "Posted Item Tracking" extends "Posted Item Tracking Lines"
+pageextension 50206 "Vendor Card Ext1" extends "Vendor Card"
 {
     layout
     {
-        addafter("Expiration Date")
+        addafter("Balance Due (LCY)")
         {
-            field("Back Pack/Display"; Rec."Back Pack/Display")
+            field("Vendor Credit Budget.(LCY)"; Rec."Vendor Credit Budget.(LCY)")
             {
                 ApplicationArea = all;
             }

@@ -1,4 +1,4 @@
-codeunit 50072 "New Functions"
+codeunit 50201 "New Functions"
 {
     trigger OnRun()
     begin

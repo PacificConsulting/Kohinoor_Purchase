@@ -1,4 +1,4 @@
-table 50071 "Item Status"
+table 50201 "Item Status"
 {
     DataClassification = ToBeClassified;
 

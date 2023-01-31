@@ -1,13 +1,13 @@
-tableextension 50071 ILEExt extends "Item Ledger Entry"
+tableextension 50201 ILEExt extends "Item Ledger Entry"
 {
     fields
     {
-        field(50071; "Back Pack/Display"; Option)
+        field(50201; "Back Pack/Display"; Option)
         {
             OptionMembers = " ",Backpack,Display;
             OptionCaption = ' ,Backpack,Display';
         }
-        field(50072; "Item Status"; Code[20])
+        field(50202; "Item Status"; Code[20])
         {
             DataClassification = ToBeClassified;
         }

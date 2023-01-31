@@ -1,4 +1,4 @@
-tableextension 50078 "Purchase Header " extends "Purchase Header"
+tableextension 50208 "Purchase Header " extends "Purchase Header"
 {
     fields
     {
