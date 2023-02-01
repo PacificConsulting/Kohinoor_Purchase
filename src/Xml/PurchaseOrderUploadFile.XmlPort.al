@@ -70,7 +70,7 @@ xmlport 50202 "Purchase Order Upload 1"
 
                     PurchaseHeader.RESET;
                     PurchaseHeader.SETRANGE("Document Type", DocType);
-                    //PurchaseHeader.SETRANGE("No.", DocNo);
+                    PurchaseHeader.SETRANGE("No.", DocNo);
                     IF NOT PurchaseHeader.FINDFIRST THEN BEGIN
                         PurchaseHeader.INIT;
                         PurchaseHeader.VALIDATE(PurchaseHeader."Document Type", DocType);
