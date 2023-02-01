@@ -48,7 +48,7 @@ codeunit 50202 Events
         NewItemLedgEntry.Reset();
         NewItemLedgEntry.SetRange("Item No.", RecItem."No.");
         IF NewItemLedgEntry.FindFirst() then
-            NewItemLedgEntry."Item Status" := RecItem."Item Ststus";
+            NewItemLedgEntry."Item Status" := RecItem."Item Status";
         //>>PCPL/NSW/07  CODE FOR OTHER REQUIRMENT TO FLOW NEW FIEL TO ILE
     end;
 
