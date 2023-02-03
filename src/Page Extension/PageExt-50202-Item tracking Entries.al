@@ -37,6 +37,21 @@ pageextension 50202 ItemTrackingLinesExt extends "Item Tracking Lines"
                 END;
             end;
         }
+        modify("Serial No.")
+        {
+            trigger OnAfterValidate()
+            var
+                ILE: Record "Item Ledger Entry";
+            begin
+                //PCPL-0070 << START
+                ILE.Reset();
+                ILE.SetRange("Serial No.", Rec."Serial No.");
+                if ILE.FindFirst() then
+                    Rec."Back Pack/Display" := ILE."Back Pack/Display";
+                CurrPage.SaveRecord();
+                //PCPL-0070 << END
+            end;
+        }
     }
 
     actions

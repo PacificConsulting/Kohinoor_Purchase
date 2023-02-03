@@ -15,6 +15,7 @@ tableextension 50204 TrackSpecExt extends "Tracking Specification"
             end;
         }
     }
+
     procedure InitSellStatus()
     var
         SellStaus: Option;
