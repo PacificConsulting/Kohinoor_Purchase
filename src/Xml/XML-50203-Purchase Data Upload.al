@@ -58,6 +58,14 @@ xmlport 50203 "Purchase Docuemnt Upload"
                 textelement(VendorInvDate)
                 {
                 }
+                textelement(GlobalDimension1)
+                {
+                }
+                textelement(GlobalDimension2)
+                {
+                }
+
+
                 //****New
 
 
@@ -114,7 +122,8 @@ xmlport 50203 "Purchase Docuemnt Upload"
                         PurchaseHeader.validate("Vendor Invoice No.", VendorInvNo);
                         EVALUATE(DocDate, VendorInvDate);
                         PurchaseHeader.validate("Document Date", DocDate);
-                        //PurchaseHeader.VALIDATE("Shortcut Dimension 1 Code", GlobalDimension1);
+                        PurchaseHeader.VALIDATE("Shortcut Dimension 1 Code", GlobalDimension1);
+                        PurchaseHeader.VALIDATE("Shortcut Dimension 2 Code", GlobalDimension2);
                         PurchaseHeader.MODIFY(true);
                         COMMIT;
 
@@ -141,7 +150,8 @@ xmlport 50203 "Purchase Docuemnt Upload"
                         PurchaseLine.Validate("HSN/SAC Code", HSNCode);
                         PurchaseLine.Validate("TDS Section Code", TDSSection);
                         PurchaseLine.VALIDATE("Direct Unit Cost", DirectUnitCostValue);
-                        //PurchaseLine.VALIDATE("Shortcut Dimension 1 Code", PurchaseHeader."Shortcut Dimension 1 Code");
+                        PurchaseLine.VALIDATE("Shortcut Dimension 1 Code", PurchaseHeader."Shortcut Dimension 1 Code");
+                        PurchaseLine.VALIDATE("Shortcut Dimension 2 Code", PurchaseHeader."Shortcut Dimension 2 Code");
                         PurchaseLine.MODIFY(TRUE);
 
                     END ELSE BEGIN

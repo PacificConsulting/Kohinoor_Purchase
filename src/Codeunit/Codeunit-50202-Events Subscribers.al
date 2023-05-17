@@ -90,16 +90,16 @@ codeunit 50202 Events
     local procedure OnAfterReleasePurchaseDoc(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; var LinesWereModified: Boolean)
     var
         Vend: Record Vendor;
+        PL: record "Purchase Line";
     begin
         IF PurchaseHeader.Status = PurchaseHeader.Status::Released then begin
             IF Vend.get(PurchaseHeader."Buy-from Vendor No.") then
                 if Vend."E-Mail" = '' then
                     Message('Vendor Email is blank so system will not send the mail')
                 else
-                    IF Not Confirm('Do you want to send the mail', true) then
-                        exit;
-            PurchaseHeader.SendMail();
-
+                    // IF Confirm('Do you want to send the mail', true) then
+                    PurchaseHeader.SendMail();
+            //end;////
         end;
     end;
 
