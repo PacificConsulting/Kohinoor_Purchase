@@ -4,6 +4,36 @@ codeunit 50202 Events
     begin
 
     end;
+    //<<<<<<<START********************************CU-90*****************************************
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterInsertReceiptHeader', '', false, false)]
+    local procedure OnAfterInsertReceiptHeader(var PurchHeader: Record "Purchase Header"; var PurchRcptHeader: Record "Purch. Rcpt. Header"; var TempWhseRcptHeader: Record "Warehouse Receipt Header" temporary; WhseReceive: Boolean; CommitIsSuppressed: Boolean)
+    begin
+        //PurchRcptHeader."Vendor Invoice No." := PurchHeader."Vendor Invoice No.";
+        PurchRcptHeader."Vendor Invoice No." := TempWhseRcptHeader."Vendor Invoice No.";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnInsertReceiptLineOnAfterCalcShouldGetWhseRcptLine', '', false, false)]
+    local procedure OnInsertReceiptLineOnAfterCalcShouldGetWhseRcptLine(PurchRcptHeader: Record "Purch. Rcpt. Header"; PurchLine: Record "Purchase Line"; PostedWhseRcptHeader: Record "Posted Whse. Receipt Header"; WhseRcptHeader: Record "Warehouse Receipt Header"; CostBaseAmount: Decimal; WhseReceive: Boolean; WhseShip: Boolean; var ShouldGetWhseRcptLine: Boolean; xPurchLine: Record "Purchase Line"; var PurchRcptLine: Record "Purch. Rcpt. Line")
+    begin
+        PurchRcptHeader."Vendor Invoice No." := WhseRcptHeader."Vendor Invoice No.";
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnPostItemJnlLineOnAfterCopyDocumentFields', '', false, false)]
+    local procedure OnPostItemJnlLineOnAfterCopyDocumentFields(var ItemJournalLine: Record "Item Journal Line"; PurchaseLine: Record "Purchase Line"; WarehouseReceiptHeader: Record "Warehouse Receipt Header"; WarehouseShipmentHeader: Record "Warehouse Shipment Header"; PurchRcptHeader: Record "Purch. Rcpt. Header")
+    begin
+        PurchRcptHeader."Vendor Invoice No." := WarehouseReceiptHeader."Vendor Invoice No.";
+    end;
+    //<<<<<<<END********************************CU-90*****************************************
+
+
+    //<<<<<START********************************CU-6500*****************************************
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Tracking Management", 'OnAfterCreateSNInformation', '', false, false)]
+    local procedure OnAfterCreateSNInformation(var SerialNoInfo: Record "Serial No. Information"; TrackingSpecification: Record "Tracking Specification")
+    begin
+        SerialNoInfo."Back Pack Dispaly" := TrackingSpecification."Back Pack Dispaly";
+    end;
+    //<<<<<END********************************CU-6500*****************************************
+
     //<<<<<START********************************PAGE-6510*****************************************
     [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines", 'OnRegisterChangeOnAfterCreateReservEntry', '', false, false)]
     local procedure OnRegisterChangeOnAfterCreateReservEntry(var ReservEntry: Record "Reservation Entry"; TrackingSpecification: Record "Tracking Specification"; OldTrackingSpecification: Record "Tracking Specification"; CurrentRunMode: Enum "Item Tracking Run Mode"; CurrentSourceType: Integer; TempReservEntry: Record "Reservation Entry");
@@ -44,12 +74,12 @@ codeunit 50202 Events
         RecItem: Record 27;
     begin
         NewItemLedgEntry."Back Pack/Display" := ItemJournalLine."Back Pack/Display";
-        //<<PCPL/NSW/07  CODE FOR OTHER REQUIRMENT TO FLOW NEW FIEL TO ILE
+        //<<PCPL/NSW/07  CODE FOR OTHER REQUIRMENT TO FLOW NEW FIELD TO ILE
         NewItemLedgEntry.Reset();
         NewItemLedgEntry.SetRange("Item No.", RecItem."No.");
         IF NewItemLedgEntry.FindFirst() then
             NewItemLedgEntry."Item Status" := RecItem."Item Status";
-        //>>PCPL/NSW/07  CODE FOR OTHER REQUIRMENT TO FLOW NEW FIEL TO ILE
+        //>>PCPL/NSW/07  CODE FOR OTHER REQUIRMENT TO FLOW NEW FIELD TO ILE
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnAfterInitValueEntry', '', false, false)]

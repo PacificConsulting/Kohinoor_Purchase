@@ -7,6 +7,14 @@ tableextension 50207 Item_Status extends Item
             DataClassification = ToBeClassified;
             TableRelation = "Item Status"."Item Code";
         }
+        field(50202; "EAN Code"; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50303; Demo; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     var

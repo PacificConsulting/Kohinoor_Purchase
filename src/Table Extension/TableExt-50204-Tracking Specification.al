@@ -7,6 +7,10 @@ tableextension 50204 TrackSpecExt extends "Tracking Specification"
             OptionMembers = " ",Backpack,Display;
             OptionCaption = ' ,Backpack,Display';
         }
+        field(50202; "Back Pack Dispaly"; TExt[10])
+        {
+            DataClassification = ToBeClassified;
+        }
         modify("Lot No.")
         {
             trigger OnAfterValidate()

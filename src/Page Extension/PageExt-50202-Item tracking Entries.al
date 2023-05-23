@@ -9,6 +9,11 @@ pageextension 50202 ItemTrackingLinesExt extends "Item Tracking Lines"
                 ApplicationArea = All;
 
             }
+            field("Back Pack Dispaly"; Rec."Back Pack Dispaly")
+            {
+                ApplicationArea = all;
+            }
+
 
 
         }
