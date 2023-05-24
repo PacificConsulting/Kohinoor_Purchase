@@ -2,7 +2,14 @@ tableextension 50208 "Purchase Header " extends "Purchase Header"
 {
     fields
     {
-
+        field(50203; "LR No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50204; "LR Date"; date)
+        {
+            DataClassification = ToBeClassified;
+        }
     }
     procedure SendMail()
     begin

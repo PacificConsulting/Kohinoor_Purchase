@@ -10,20 +10,29 @@ codeunit 50202 Events
     begin
         //PurchRcptHeader."Vendor Invoice No." := PurchHeader."Vendor Invoice No.";
         PurchRcptHeader."Vendor Invoice No." := TempWhseRcptHeader."Vendor Invoice No.";
+        PurchRcptHeader."LR No." := TempWhseRcptHeader."LR No.";
+        PurchRcptHeader."LR Date" := TempWhseRcptHeader."LR Date";
+        PurchRcptHeader.Modify();
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnInsertReceiptLineOnAfterCalcShouldGetWhseRcptLine', '', false, false)]
-    local procedure OnInsertReceiptLineOnAfterCalcShouldGetWhseRcptLine(PurchRcptHeader: Record "Purch. Rcpt. Header"; PurchLine: Record "Purchase Line"; PostedWhseRcptHeader: Record "Posted Whse. Receipt Header"; WhseRcptHeader: Record "Warehouse Receipt Header"; CostBaseAmount: Decimal; WhseReceive: Boolean; WhseShip: Boolean; var ShouldGetWhseRcptLine: Boolean; xPurchLine: Record "Purchase Line"; var PurchRcptLine: Record "Purch. Rcpt. Line")
-    begin
-        PurchRcptHeader."Vendor Invoice No." := WhseRcptHeader."Vendor Invoice No.";
-    end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnInsertReceiptLineOnAfterCalcShouldGetWhseRcptLine', '', false, false)]
+    // local procedure OnInsertReceiptLineOnAfterCalcShouldGetWhseRcptLine(PurchRcptHeader: Record "Purch. Rcpt. Header"; PurchLine: Record "Purchase Line"; PostedWhseRcptHeader: Record "Posted Whse. Receipt Header"; WhseRcptHeader: Record "Warehouse Receipt Header"; CostBaseAmount: Decimal; WhseReceive: Boolean; WhseShip: Boolean; var ShouldGetWhseRcptLine: Boolean; xPurchLine: Record "Purchase Line"; var PurchRcptLine: Record "Purch. Rcpt. Line")
+    // begin
+    //     PurchRcptHeader."Vendor Invoice No." := WhseRcptHeader."Vendor Invoice No.";
+    // end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnPostItemJnlLineOnAfterCopyDocumentFields', '', false, false)]
-    local procedure OnPostItemJnlLineOnAfterCopyDocumentFields(var ItemJournalLine: Record "Item Journal Line"; PurchaseLine: Record "Purchase Line"; WarehouseReceiptHeader: Record "Warehouse Receipt Header"; WarehouseShipmentHeader: Record "Warehouse Shipment Header"; PurchRcptHeader: Record "Purch. Rcpt. Header")
-    begin
-        PurchRcptHeader."Vendor Invoice No." := WarehouseReceiptHeader."Vendor Invoice No.";
-    end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnPostItemJnlLineOnAfterCopyDocumentFields', '', false, false)]
+    // local procedure OnPostItemJnlLineOnAfterCopyDocumentFields(var ItemJournalLine: Record "Item Journal Line"; PurchaseLine: Record "Purchase Line"; WarehouseReceiptHeader: Record "Warehouse Receipt Header"; WarehouseShipmentHeader: Record "Warehouse Shipment Header"; PurchRcptHeader: Record "Purch. Rcpt. Header")
+    // begin
+    //     PurchRcptHeader."Vendor Invoice No." := WarehouseReceiptHeader."Vendor Invoice No.";
+    // end;
     //<<<<<<<END********************************CU-90*****************************************
+
+    [EventSubscriber(ObjectType::Report, report::"Copy Purchase Document", 'OnValidateDocNoOnAfterTransferFieldsFromPurchRcptHeader', '', false, false)]
+    local procedure OnValidateDocNoOnAfterTransferFieldsFromPurchRcptHeader(FromPurchHeader: Record "Purchase Header"; FromPurchRcptHeader: Record "Purch. Rcpt. Header")
+    begin
+        FromPurchHeader."Vendor Invoice No." := FromPurchRcptHeader."Vendor Invoice No.";
+    end;
 
 
     //<<<<<START********************************CU-6500*****************************************

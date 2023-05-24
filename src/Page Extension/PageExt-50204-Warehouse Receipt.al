@@ -9,13 +9,23 @@ pageextension 50204 "Warehouse Receipt" extends "Warehouse Receipt"
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Vendor Invoice No. field.';
-                //   Editable = false;
+
             }
             field("Vendor Invoice Date"; Rec."Vendor Invoice Date")
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Vendor Invoice Date field.';
-                // Editable = false;
+
+            }
+            field("LR No."; Rec."LR No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the LR No. field.';
+            }
+            field("LR Date"; Rec."LR Date")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the LR Date field.';
             }
         }
     }
