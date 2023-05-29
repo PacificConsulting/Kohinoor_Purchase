@@ -4,6 +4,15 @@ codeunit 50202 Events
     begin
 
     end;
+
+    //<<<<<<<START********************************CU-90*****************************************
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostItemJnlLineCopyProdOrder', '', false, false)]
+    local procedure OnAfterPostItemJnlLineCopyProdOrder(var ItemJnlLine: Record "Item Journal Line"; PurchLine: Record "Purchase Line"; PurchRcptHeader: Record "Purch. Rcpt. Header"; QtyToBeReceived: Decimal; CommitIsSupressed: Boolean; QtyToBeInvoiced: Decimal)
+    begin
+        ItemJnlLine."Vendor Model No." := PurchLine."Vendor Model No.";
+    end;
+    //<<<<<<<END********************************CU-90*****************************************
+
     //<<<<<<<START********************************CU-90*****************************************
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterInsertReceiptHeader', '', false, false)]
     local procedure OnAfterInsertReceiptHeader(var PurchHeader: Record "Purchase Header"; var PurchRcptHeader: Record "Purch. Rcpt. Header"; var TempWhseRcptHeader: Record "Warehouse Receipt Header" temporary; WhseReceive: Boolean; CommitIsSuppressed: Boolean)
@@ -12,28 +21,20 @@ codeunit 50202 Events
         PurchRcptHeader."Vendor Invoice No." := TempWhseRcptHeader."Vendor Invoice No.";
         PurchRcptHeader."LR No." := TempWhseRcptHeader."LR No.";
         PurchRcptHeader."LR Date" := TempWhseRcptHeader."LR Date";
+        PurchRcptHeader.Remarks := TempWhseRcptHeader.Remarks;
         PurchRcptHeader.Modify();
     end;
-
-    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnInsertReceiptLineOnAfterCalcShouldGetWhseRcptLine', '', false, false)]
-    // local procedure OnInsertReceiptLineOnAfterCalcShouldGetWhseRcptLine(PurchRcptHeader: Record "Purch. Rcpt. Header"; PurchLine: Record "Purchase Line"; PostedWhseRcptHeader: Record "Posted Whse. Receipt Header"; WhseRcptHeader: Record "Warehouse Receipt Header"; CostBaseAmount: Decimal; WhseReceive: Boolean; WhseShip: Boolean; var ShouldGetWhseRcptLine: Boolean; xPurchLine: Record "Purchase Line"; var PurchRcptLine: Record "Purch. Rcpt. Line")
-    // begin
-    //     PurchRcptHeader."Vendor Invoice No." := WhseRcptHeader."Vendor Invoice No.";
-    // end;
-
-    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnPostItemJnlLineOnAfterCopyDocumentFields', '', false, false)]
-    // local procedure OnPostItemJnlLineOnAfterCopyDocumentFields(var ItemJournalLine: Record "Item Journal Line"; PurchaseLine: Record "Purchase Line"; WarehouseReceiptHeader: Record "Warehouse Receipt Header"; WarehouseShipmentHeader: Record "Warehouse Shipment Header"; PurchRcptHeader: Record "Purch. Rcpt. Header")
-    // begin
-    //     PurchRcptHeader."Vendor Invoice No." := WarehouseReceiptHeader."Vendor Invoice No.";
-    // end;
     //<<<<<<<END********************************CU-90*****************************************
 
-    [EventSubscriber(ObjectType::Report, report::"Copy Purchase Document", 'OnValidateDocNoOnAfterTransferFieldsFromPurchRcptHeader', '', false, false)]
-    local procedure OnValidateDocNoOnAfterTransferFieldsFromPurchRcptHeader(FromPurchHeader: Record "Purchase Header"; FromPurchRcptHeader: Record "Purch. Rcpt. Header")
+    //<<<<<START********************************CU-6620*****************************************
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Copy Document Mgt.", 'OnAfterCopyPostedReceipt', '', false, false)]
+    local procedure OnAfterCopyPostedReceipt(var ToPurchaseHeader: Record "Purchase Header"; OldPurchaseHeader: Record "Purchase Header"; FromPurchRcptHeader: Record "Purch. Rcpt. Header")
     begin
-        FromPurchHeader."Vendor Invoice No." := FromPurchRcptHeader."Vendor Invoice No.";
+        ToPurchaseHeader."Vendor Invoice No." := FromPurchRcptHeader."Vendor Invoice No.";
+        ToPurchaseHeader."LR No." := FromPurchRcptHeader."LR No.";
+        ToPurchaseHeader."LR Date" := FromPurchRcptHeader."LR Date";
     end;
-
+    //<<<<<END********************************CU-6620*****************************************
 
     //<<<<<START********************************CU-6500*****************************************
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Tracking Management", 'OnAfterCreateSNInformation', '', false, false)]
@@ -89,6 +90,7 @@ codeunit 50202 Events
         IF NewItemLedgEntry.FindFirst() then
             NewItemLedgEntry."Item Status" := RecItem."Item Status";
         //>>PCPL/NSW/07  CODE FOR OTHER REQUIRMENT TO FLOW NEW FIELD TO ILE
+        NewItemLedgEntry."Vendor Model No." := ItemJournalLine."Vendor Model No.";
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnAfterInitValueEntry', '', false, false)]
@@ -104,8 +106,10 @@ codeunit 50202 Events
     begin
         DefaultOption := 1;
         IF DefaultOption = 1 then begin
-            PurchaseHeader.TestField("Vendor Invoice No.");
-            PurchaseHeader.TestField("Document Date");
+            IF PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order then begin
+                PurchaseHeader.TestField("Vendor Invoice No.");
+                PurchaseHeader.TestField("Document Date");
+            end;
         end;
 
     end;
@@ -131,15 +135,18 @@ codeunit 50202 Events
         Vend: Record Vendor;
         PL: record "Purchase Line";
     begin
-        IF PurchaseHeader.Status = PurchaseHeader.Status::Released then begin
-            IF Vend.get(PurchaseHeader."Buy-from Vendor No.") then
-                if Vend."E-Mail" = '' then
-                    Message('Vendor Email is blank so system will not send the mail')
-                else
-                    // IF Confirm('Do you want to send the mail', true) then
-                    PurchaseHeader.SendMail();
-            //end;////
-        end;
+        //Code comment due post warehouse mail is sending code add on Page on relasde action
+        // If PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order then begin
+        //     IF PurchaseHeader.Status = PurchaseHeader.Status::Released then begin
+        //         IF Vend.get(PurchaseHeader."Buy-from Vendor No.") then
+        //             if Vend."E-Mail" = '' then
+        //                 Message('Vendor Email is blank so system will not send the mail')
+        //             else
+        //                 // IF Confirm('Do you want to send the mail', true) then
+        //                 PurchaseHeader.SendMail();
+        //         //end;////
+        //     end;
+        // end;
     end;
 
 }

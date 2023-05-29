@@ -11,6 +11,11 @@ tableextension 50201 ILEExt extends "Item Ledger Entry"
         {
             DataClassification = ToBeClassified;
         }
+        field(50203; "Vendor Model No."; Code[20])
+        {
+            Caption = 'Vendor Model No.';
+            DataClassification = ToBeClassified;
+        }
     }
 
     var

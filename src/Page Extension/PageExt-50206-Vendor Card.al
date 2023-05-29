@@ -8,6 +8,12 @@ pageextension 50206 "Vendor Card Ext1" extends "Vendor Card"
             {
                 ApplicationArea = all;
             }
+            field("Old Account No."; Rec."Old Account No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Old Account No. field.';
+            }
+
         }
     }
 

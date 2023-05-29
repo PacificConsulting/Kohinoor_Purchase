@@ -15,6 +15,11 @@ pageextension 50214 "Purchase invoice Card" extends "Purchase Invoice"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the LR Date field.';
             }
+            field(Remarks; Rec.Remarks)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Remarks field.';
+            }
         }
     }
 }

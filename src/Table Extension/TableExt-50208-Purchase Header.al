@@ -10,6 +10,15 @@ tableextension 50208 "Purchase Header " extends "Purchase Header"
         {
             DataClassification = ToBeClassified;
         }
+        field(50205; Attachment; Text[100])
+        {
+            Caption = 'Attachment';
+            DataClassification = ToBeClassified;
+        }
+        field(50206; Remarks; Text[150])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
     procedure SendMail()
     begin

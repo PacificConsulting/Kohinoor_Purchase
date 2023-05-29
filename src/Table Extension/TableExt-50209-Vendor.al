@@ -7,6 +7,10 @@ tableextension 50209 Vendor_ext1 extends Vendor
             DataClassification = ToBeClassified;
 
         }
+        field(50202; "Old Account No."; Code[15])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     var

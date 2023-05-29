@@ -23,5 +23,14 @@ tableextension 50211 "Purch Receipt Header" extends "Purch. Rcpt. Header"
             DataClassification = ToBeClassified;
             Editable = false;
         }
+        field(50205; Attachment; Text[100])
+        {
+            Caption = 'Attachment';
+            DataClassification = ToBeClassified;
+        }
+        field(50206; Remarks; Text[150])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 }

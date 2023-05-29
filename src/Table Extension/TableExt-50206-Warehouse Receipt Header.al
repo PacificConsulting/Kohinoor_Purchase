@@ -18,6 +18,15 @@ tableextension 50206 "WareHouse Rec. Header" extends "Warehouse Receipt Header"
         {
             DataClassification = ToBeClassified;
         }
+        field(50205; Attachment; Text[100])
+        {
+            Caption = 'Attachment';
+            DataClassification = ToBeClassified;
+        }
+        field(50206; Remarks; Text[150])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     var

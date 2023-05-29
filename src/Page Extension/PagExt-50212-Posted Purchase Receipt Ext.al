@@ -21,6 +21,11 @@ pageextension 50212 "Posted Purchase Receipt Ext" extends "Posted Purchase Recei
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the LR Date field.';
             }
+            field(Remarks; Rec.Remarks)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Remarks field.';
+            }
         }
     }
 }

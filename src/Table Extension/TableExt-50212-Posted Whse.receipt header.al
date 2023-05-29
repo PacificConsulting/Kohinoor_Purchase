@@ -22,6 +22,15 @@ tableextension 50212 "Posted Whse. receipt header" extends "Posted Whse. Receipt
             DataClassification = ToBeClassified;
             Editable = false;
         }
+        field(50205; Attachment; Text[100])
+        {
+            Caption = 'Attachment';
+            DataClassification = ToBeClassified;
+        }
+        field(50206; Remarks; Text[150])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     var

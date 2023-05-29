@@ -65,6 +65,15 @@ xmlport 50203 "Purchase Docuemnt Upload"
                 {
                 }
 
+                trigger OnAfterInitRecord()
+                var
+                    I: Integer;
+                begin
+                    I += 1;
+                    IF I = 1 THEN
+                        currXMLport.SKIP;
+                end;
+
 
                 //****New
 
@@ -85,10 +94,7 @@ xmlport 50203 "Purchase Docuemnt Upload"
 
                 trigger OnBeforeInsertRecord()
                 begin
-                    IF firstline THEN BEGIN
-                        firstline := FALSE;
-                        currXMLport.SKIP;
-                    END;
+
                     EVALUATE(DocType, DocumentType);
                     PurchaseHeader.RESET;
                     PurchaseHeader.SETRANGE("Document Type", DocType);
@@ -162,6 +168,7 @@ xmlport 50203 "Purchase Docuemnt Upload"
                         ELSE
                             Linenumber := 10000;
                         PurchaseLine.INIT;
+                        PurchaseLine."Document Type" := PurchaseHeader."Document Type";
                         PurchaseLine."Document No." := PurchaseHeader."No.";
                         PurchaseLine."Line No." := Linenumber;
                         PurchaseLine.INSERT(TRUE);
@@ -177,7 +184,9 @@ xmlport 50203 "Purchase Docuemnt Upload"
 
                 end;
             }
+
         }
+
     }
 
     requestpage
@@ -192,17 +201,17 @@ xmlport 50203 "Purchase Docuemnt Upload"
         }
     }
 
+
     trigger OnPostXmlPort()
     begin
         MESSAGE('Data Has Been Imported Successfully');
     end;
 
-    trigger OnPreXmlPort()
-    begin
-        firstline := TRUE;
-    end;
+
+
 
     var
+
         Text0001: Label 'Item No. %1 is not a part of Purchase %2 No. %3';
         Text0002: Label 'Please Modify the Quantity for Item No. %1 as the Quantity being recieved is more than %2. Total Quantity being recieved is %3';
         Linenumber: Integer;
@@ -212,7 +221,7 @@ xmlport 50203 "Purchase Docuemnt Upload"
         PurchaseLine: Record 39;
         Unit: Decimal;
         Qty: Decimal;
-        NoSerMngt: Codeunit 396;
+        //NoSerMngt: Codeunit no
         Item: Record 27;
         BrandInp: Code[20];
         OrderNoSeries: Code[20];
@@ -226,11 +235,15 @@ xmlport 50203 "Purchase Docuemnt Upload"
         ItemType: Option " ","G/L Account",Item,Resource,"Fixed Asset","Charge (Item)";
         DocNo: Code[20];
 
+
     // [Scope('Internal')]
     procedure SetInputs(Brand_: Code[20]; OrderNoSeries_: Code[20])
     begin
         BrandInp := Brand_;
         OrderNoSeries := OrderNoSeries_;
     end;
+
+    var
+
 }
 

@@ -7,6 +7,11 @@ tableextension 50203 ItemJnlLineExt extends "Item Journal Line"
             OptionMembers = " ",Backpack,Display;
             OptionCaption = ' ,Backpack,Display';
         }
+        field(50202; "Vendor Model No."; Code[20])
+        {
+            Caption = 'Vendor Model No.';
+            DataClassification = ToBeClassified;
+        }
     }
 
     var

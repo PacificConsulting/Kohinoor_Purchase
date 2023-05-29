@@ -27,12 +27,27 @@ pageextension 50204 "Warehouse Receipt" extends "Warehouse Receipt"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the LR Date field.';
             }
+            field(Remarks; Rec.Remarks)
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Remarks field.';
+            }
         }
     }
 
     actions
     {
-        // Add changes to page actions here
+        modify("Post Receipt")
+        {
+            trigger OnBeforeAction()
+            var
+                myInt: Integer;
+            begin
+                Rec.TestField("Vendor Invoice No.");
+                Rec.TestField("LR No.");
+                Rec.TestField("LR Date");
+            end;
+        }
     }
 
     var
