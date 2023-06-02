@@ -1,18 +1,18 @@
-xmlport 50203 "Purchase Docuemnt Upload"
+xmlport 50203 "Purchase Document Upload"
 {
     Direction = Import;
-    FieldDelimiter = '<None>';
-    FieldSeparator = '<TAB>';
+    DefaultFieldsValidation = true;
     Format = VariableText;
-
+    FormatEvaluate = Legacy; ////
     schema
     {
         textelement(root)
         {
-            MinOccurs = Zero;
+            //MinOccurs = Zero;
             tableelement(Integer; Integer)
             {
                 XmlName = 'PurchaseHeader';
+                AutoSave = false;
                 textelement(DocumentType)
                 {
                 }
@@ -65,62 +65,39 @@ xmlport 50203 "Purchase Docuemnt Upload"
                 {
                 }
 
-                trigger OnAfterInitRecord()
-                var
-                    I: Integer;
-                begin
-                    I += 1;
-                    IF I = 1 THEN
-                        currXMLport.SKIP;
-                end;
-
-
-                //****New
-
-
-                // textelement(DocumentDate)
-                // {
-                //     MinOccurs = Zero;
-                // }
-                // textelement(ExternalDocumentNo)
-                // {
-                // }
-                // textelement(UOM)
-                // {
-                // }
-                // textelement(GlobalDimension1)
-                // {
-                // }
-
                 trigger OnBeforeInsertRecord()
                 begin
-
+                    PurchPay.Get();
                     EVALUATE(DocType, DocumentType);
                     PurchaseHeader.RESET;
                     PurchaseHeader.SETRANGE("Document Type", DocType);
                     PurchaseHeader.SETRANGE("No.", DocNo);
+                    PurchaseHeader.SetRange("Location Code", LocationCode);
                     IF NOT PurchaseHeader.FINDFIRST THEN BEGIN
                         PurchaseHeader.INIT;
                         PurchaseHeader.VALIDATE(PurchaseHeader."Document Type", DocType);
                         IF DocType = DocType::Order then begin
-                            DocNo := NoSeriesMgt.GetNextNo('P-ORD', PurchaseHeader."Posting Date", false);
+                            PurchPay.TestField(PurchPay."Order Nos.");
+                            DocNo := NoSeriesMgt.GetNextNo(PurchPay."Order Nos.", PurchaseHeader."Posting Date", True);
                             PurchaseHeader."No." := DocNo;
                         end else
                             if DocType = DocType::Invoice then begin
-                                DocNo := NoSeriesMgt.GetNextNo('P-INV', PurchaseHeader."Posting Date", false);
+                                PurchPay.TestField(PurchPay."Invoice Nos.");
+                                DocNo := NoSeriesMgt.GetNextNo(PurchPay."Invoice Nos.", PurchaseHeader."Posting Date", true);
                                 PurchaseHeader."No." := DocNo;
                             end else
                                 if DocType = DocType::"Credit Memo" then begin
-                                    DocNo := NoSeriesMgt.GetNextNo('P-CR', PurchaseHeader."Posting Date", false);
+                                    PurchPay.TestField(PurchPay."Credit Memo Nos.");
+                                    DocNo := NoSeriesMgt.GetNextNo(PurchPay."Credit Memo Nos.", PurchaseHeader."Posting Date", true);
                                     PurchaseHeader."No." := DocNo;
                                 end else
                                     if DocType = DocType::"Return Order" then begin
-                                        DocNo := NoSeriesMgt.GetNextNo('P-RETORD', PurchaseHeader."Posting Date", false);
+                                        PurchPay.TestField(PurchPay."Return Order Nos.");
+                                        DocNo := NoSeriesMgt.GetNextNo(PurchPay."Return Order Nos.", PurchaseHeader."Posting Date", true);
                                         PurchaseHeader."No." := DocNo;
                                     end;
 
                         PurchaseHeader.INSERT(TRUE);
-                        PurchaseHeader.VALIDATE(PurchaseHeader."Location Code", LocationCode);
                         PurchaseHeader.VALIDATE("Buy-from Vendor No.", vendorNo);
                         EVALUATE(PostDate, Postingdate);
                         PurchaseHeader.VALIDATE(PurchaseHeader."Posting Date", PostDate);
@@ -128,6 +105,7 @@ xmlport 50203 "Purchase Docuemnt Upload"
                         PurchaseHeader.validate("Vendor Invoice No.", VendorInvNo);
                         EVALUATE(DocDate, VendorInvDate);
                         PurchaseHeader.validate("Document Date", DocDate);
+                        PurchaseHeader.VALIDATE(PurchaseHeader."Location Code", LocationCode);
                         PurchaseHeader.VALIDATE("Shortcut Dimension 1 Code", GlobalDimension1);
                         PurchaseHeader.VALIDATE("Shortcut Dimension 2 Code", GlobalDimension2);
                         PurchaseHeader.MODIFY(true);
@@ -141,6 +119,7 @@ xmlport 50203 "Purchase Docuemnt Upload"
                             Linenumber := 10000;
 
                         PurchaseLine.INIT;
+                        PurchaseLine.VALIDATE(PurchaseLine."Document Type", DocType);
                         PurchaseLine."Document No." := PurchaseHeader."No.";
                         PurchaseLine."Line No." := Linenumber;
                         PurchaseLine.INSERT(TRUE);
@@ -173,9 +152,11 @@ xmlport 50203 "Purchase Docuemnt Upload"
                         PurchaseLine."Line No." := Linenumber;
                         PurchaseLine.INSERT(TRUE);
                         PurchaseLine.VALIDATE(PurchaseLine."Location Code", PurchaseHeader."Location Code");
+                        PurchaseLine.Validate(Type, ItemType);
                         PurchaseLine.VALIDATE(PurchaseLine."No.", ItemNo);
                         EVALUATE(Qty, Quantity);
                         PurchaseLine.VALIDATE(PurchaseLine.Quantity, Qty);
+
                         // PurchaseLine.VALIDATE("Unit of Measure", UOM);
                         EVALUATE(DirectUnitCostValue, DirectUnitCost);
                         PurchaseLine.VALIDATE("Direct Unit Cost", DirectUnitCostValue);
@@ -183,6 +164,14 @@ xmlport 50203 "Purchase Docuemnt Upload"
                     END;
 
                 end;
+
+                trigger OnAfterInitRecord()
+                begin
+                    I += 1;
+                    IF I = 1 THEN
+                        currXMLport.SKIP;
+                end;
+
             }
 
         }
@@ -204,11 +193,8 @@ xmlport 50203 "Purchase Docuemnt Upload"
 
     trigger OnPostXmlPort()
     begin
-        MESSAGE('Data Has Been Imported Successfully');
+        MESSAGE('Data has been imported successfully');
     end;
-
-
-
 
     var
 
@@ -234,16 +220,8 @@ xmlport 50203 "Purchase Docuemnt Upload"
         NoSeriesMgt: Codeunit 396;
         ItemType: Option " ","G/L Account",Item,Resource,"Fixed Asset","Charge (Item)";
         DocNo: Code[20];
-
-
-    // [Scope('Internal')]
-    procedure SetInputs(Brand_: Code[20]; OrderNoSeries_: Code[20])
-    begin
-        BrandInp := Brand_;
-        OrderNoSeries := OrderNoSeries_;
-    end;
-
-    var
+        PurchPay: Record "Purchases & Payables Setup";
+        I: Integer;
 
 }
 

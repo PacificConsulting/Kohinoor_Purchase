@@ -15,6 +15,17 @@ pageextension 50210 "Purchase Order Mail" extends "Purchase Order"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Remarks field.';
             }
+            field("LR No."; Rec."LR No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the LR No. field.';
+            }
+            field("LR Date"; Rec."LR Date")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the LR Date field.';
+            }
+
         }
     }
 

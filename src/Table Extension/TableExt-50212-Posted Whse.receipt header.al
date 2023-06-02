@@ -31,6 +31,10 @@ tableextension 50212 "Posted Whse. receipt header" extends "Posted Whse. Receipt
         {
             DataClassification = ToBeClassified;
         }
+        field(50207; "Vehicle No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     var

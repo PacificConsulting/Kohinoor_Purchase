@@ -9,6 +9,11 @@ tableextension 50206 "WareHouse Rec. Header" extends "Warehouse Receipt Header"
         field(50202; "Vendor Invoice Date"; date)
         {
             DataClassification = ToBeClassified;
+            trigger OnValidate()
+            begin
+                IF Today < "Vendor Invoice Date" then
+                    Error('Vendor invoice date should not greater then %1', Today);
+            end;
         }
         field(50203; "LR No."; Code[20])
         {
@@ -24,6 +29,10 @@ tableextension 50206 "WareHouse Rec. Header" extends "Warehouse Receipt Header"
             DataClassification = ToBeClassified;
         }
         field(50206; Remarks; Text[150])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50207; "Vehicle No."; Code[20])
         {
             DataClassification = ToBeClassified;
         }

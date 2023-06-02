@@ -25,6 +25,7 @@ pageextension 50212 "Posted Purchase Receipt Ext" extends "Posted Purchase Recei
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Remarks field.';
+                Editable = false;
             }
         }
     }

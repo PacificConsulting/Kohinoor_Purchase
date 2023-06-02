@@ -22,7 +22,16 @@ codeunit 50202 Events
         PurchRcptHeader."LR No." := TempWhseRcptHeader."LR No.";
         PurchRcptHeader."LR Date" := TempWhseRcptHeader."LR Date";
         PurchRcptHeader.Remarks := TempWhseRcptHeader.Remarks;
+        PurchRcptHeader."Vehicle No." := TempWhseRcptHeader."Vehicle No.";
         PurchRcptHeader.Modify();
+
+        PurchRcptHeader."Vendor Invoice No." := PurchHeader."Vendor Invoice No.";
+        PurchRcptHeader."LR No." := PurchHeader."LR No.";
+        PurchRcptHeader."LR Date" := PurchHeader."LR Date";
+        PurchRcptHeader.Remarks := PurchHeader.Remarks;
+        PurchRcptHeader."Vehicle No." := PurchHeader."Vehicle No.";
+        PurchRcptHeader.Modify();
+
     end;
     //<<<<<<<END********************************CU-90*****************************************
 

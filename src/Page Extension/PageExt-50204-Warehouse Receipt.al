@@ -27,6 +27,11 @@ pageextension 50204 "Warehouse Receipt" extends "Warehouse Receipt"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the LR Date field.';
             }
+            field("Vehicle No."; Rec."Vehicle No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Vehicle No. field.';
+            }
             field(Remarks; Rec.Remarks)
             {
                 ApplicationArea = All;
@@ -46,6 +51,7 @@ pageextension 50204 "Warehouse Receipt" extends "Warehouse Receipt"
                 Rec.TestField("Vendor Invoice No.");
                 Rec.TestField("LR No.");
                 Rec.TestField("LR Date");
+                Rec.TestField(Remarks);
             end;
         }
     }

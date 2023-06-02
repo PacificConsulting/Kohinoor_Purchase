@@ -1,6 +1,8 @@
 table 50201 "Item Status"
 {
     DataClassification = ToBeClassified;
+    LookupPageId = 50201;
+    DrillDownPageId = 50201;
 
     fields
     {
