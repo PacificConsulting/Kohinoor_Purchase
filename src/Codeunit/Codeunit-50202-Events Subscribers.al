@@ -5,6 +5,7 @@ codeunit 50202 Events
 
     end;
 
+
     //<<<<<<<START********************************CU-90*****************************************
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostItemJnlLineCopyProdOrder', '', false, false)]
     local procedure OnAfterPostItemJnlLineCopyProdOrder(var ItemJnlLine: Record "Item Journal Line"; PurchLine: Record "Purchase Line"; PurchRcptHeader: Record "Purch. Rcpt. Header"; QtyToBeReceived: Decimal; CommitIsSupressed: Boolean; QtyToBeInvoiced: Decimal)
@@ -16,8 +17,12 @@ codeunit 50202 Events
     //<<<<<<<START********************************CU-90*****************************************
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterInsertReceiptHeader', '', false, false)]
     local procedure OnAfterInsertReceiptHeader(var PurchHeader: Record "Purchase Header"; var PurchRcptHeader: Record "Purch. Rcpt. Header"; var TempWhseRcptHeader: Record "Warehouse Receipt Header" temporary; WhseReceive: Boolean; CommitIsSuppressed: Boolean)
+    var
+        RecLoc: Record 14;
+        Rlocbool: Boolean;
     begin
         //PurchRcptHeader."Vendor Invoice No." := PurchHeader."Vendor Invoice No.";
+
         PurchRcptHeader."Vendor Invoice No." := TempWhseRcptHeader."Vendor Invoice No.";
         PurchRcptHeader."LR No." := TempWhseRcptHeader."LR No.";
         PurchRcptHeader."LR Date" := TempWhseRcptHeader."LR Date";
@@ -25,12 +30,17 @@ codeunit 50202 Events
         PurchRcptHeader."Vehicle No." := TempWhseRcptHeader."Vehicle No.";
         PurchRcptHeader.Modify();
 
-        PurchRcptHeader."Vendor Invoice No." := PurchHeader."Vendor Invoice No.";
-        PurchRcptHeader."LR No." := PurchHeader."LR No.";
-        PurchRcptHeader."LR Date" := PurchHeader."LR Date";
-        PurchRcptHeader.Remarks := PurchHeader.Remarks;
-        PurchRcptHeader."Vehicle No." := PurchHeader."Vehicle No.";
-        PurchRcptHeader.Modify();
+        IF RecLoc.Get(PurchHeader."Location Code") then begin
+            Rlocbool := RecLoc.RequireReceive(PurchHeader."Location Code");
+            IF Rlocbool = false then begin
+                PurchRcptHeader."Vendor Invoice No." := PurchHeader."Vendor Invoice No.";
+                PurchRcptHeader."LR No." := PurchHeader."LR No.";
+                PurchRcptHeader."LR Date" := PurchHeader."LR Date";
+                PurchRcptHeader.Remarks := PurchHeader.Remarks;
+                PurchRcptHeader."Vehicle No." := PurchHeader."Vehicle No.";
+                PurchRcptHeader.Modify();
+            end;
+        end;
 
     end;
     //<<<<<<<END********************************CU-90*****************************************
@@ -59,12 +69,22 @@ codeunit 50202 Events
     begin
         ReservEntry."Back Pack/Display" := OldTrackingSpecification."Back Pack/Display";
         ReservEntry.Modify();
+
     end;
 
     [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines", 'OnAfterCopyTrackingSpec', '', false, false)]
     local procedure OnAfterCopyTrackingSpec(var SourceTrackingSpec: Record "Tracking Specification"; var DestTrkgSpec: Record "Tracking Specification");
+    var
+        SerialNoInfo: Record "Serial No. Information";
     begin
+        SerialNoInfo.Reset();
+        SerialNoInfo.SetRange("Item No.", SourceTrackingSpec."Item No.");
+        SerialNoInfo.SetRange("Serial No.", SourceTrackingSpec."Serial No.");
+        IF SerialNoInfo.FindFirst() then
+            DestTrkgSpec."Back Pack Dispaly" := SerialNoInfo."Back Pack Dispaly";
+
         DestTrkgSpec."Back Pack/Display" := SourceTrackingSpec."Back Pack/Display";
+
     end;
 
     [EventSubscriber(ObjectType::Page, Page::"Item Tracking Lines", 'OnAfterEntriesAreIdentical', '', false, false)]

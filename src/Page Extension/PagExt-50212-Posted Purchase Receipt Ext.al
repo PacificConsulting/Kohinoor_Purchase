@@ -2,10 +2,12 @@ pageextension 50212 "Posted Purchase Receipt Ext" extends "Posted Purchase Recei
 {
     layout
     {
+        modify("Vehicle No.")
+        {
+            Editable = false;
+        }
         addafter("Vendor Shipment No.")
         {
-
-
             field("Vendor Invoice No."; Rec."Vendor Invoice No.")
             {
                 ApplicationArea = All;

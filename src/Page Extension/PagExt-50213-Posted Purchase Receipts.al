@@ -9,5 +9,6 @@ pageextension 50213 "Posted Purchase Receipts" extends "Posted Purchase Receipts
                 ApplicationArea = all;
             }
         }
+
     }
 }

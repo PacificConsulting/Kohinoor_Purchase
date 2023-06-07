@@ -193,7 +193,7 @@ xmlport 50203 "Purchase Document Upload"
 
     trigger OnPostXmlPort()
     begin
-        MESSAGE('Data has been imported successfully');
+        MESSAGE('Data has been imported successfully, Last Document No. is %1', PurchaseHeader."No.");
     end;
 
     var

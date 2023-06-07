@@ -52,6 +52,7 @@ pageextension 50204 "Warehouse Receipt" extends "Warehouse Receipt"
                 Rec.TestField("LR No.");
                 Rec.TestField("LR Date");
                 Rec.TestField(Remarks);
+                Rec.TestField("Vehicle No.");
             end;
         }
     }

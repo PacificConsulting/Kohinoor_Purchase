@@ -11,6 +11,12 @@ tableextension 50204 TrackSpecExt extends "Tracking Specification"
         {
             DataClassification = ToBeClassified;
         }
+        field(50203; "Posting Date"; Date)
+        {
+            Caption = 'Posting Date';
+            FieldClass = FlowField;
+            CalcFormula = lookup("Item Ledger Entry"."Posting Date" where("Serial No." = field("Serial No.")));
+        }
         modify("Lot No.")
         {
             trigger OnAfterValidate()
@@ -18,7 +24,21 @@ tableextension 50204 TrackSpecExt extends "Tracking Specification"
                 InitSellStatus();
             end;
         }
+        modify("Serial No.")
+        {
+            trigger OnAfterValidate()
+            var
+                SerialNoInfo: Record "Serial No. Information";
+            begin
+                SerialNoInfo.Reset();
+                SerialNoInfo.SetRange("Item No.", Rec."Item No.");
+                SerialNoInfo.SetRange("Serial No.", Rec."Serial No.");
+                IF SerialNoInfo.FindFirst() then
+                    Rec."Back Pack Dispaly" := SerialNoInfo."Back Pack Dispaly";
+            end;
+        }
     }
+
 
     procedure InitSellStatus()
     var

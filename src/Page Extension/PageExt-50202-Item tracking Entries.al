@@ -13,6 +13,12 @@ pageextension 50202 ItemTrackingLinesExt extends "Item Tracking Lines"
             {
                 ApplicationArea = all;
             }
+            field("Posting Date"; Rec."Posting Date")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Posting Date field.';
+            }
+
 
 
 
@@ -47,6 +53,7 @@ pageextension 50202 ItemTrackingLinesExt extends "Item Tracking Lines"
             trigger OnAfterValidate()
             var
                 ILE: Record "Item Ledger Entry";
+                SerialNoInfo: Record "Serial No. Information";
             begin
                 //PCPL-0070 << START
                 ILE.Reset();
@@ -54,8 +61,11 @@ pageextension 50202 ItemTrackingLinesExt extends "Item Tracking Lines"
                 if ILE.FindFirst() then
                     Rec."Back Pack/Display" := ILE."Back Pack/Display";
                 CurrPage.SaveRecord();
+
                 //PCPL-0070 << END
             end;
+
+
         }
     }
 
@@ -66,6 +76,7 @@ pageextension 50202 ItemTrackingLinesExt extends "Item Tracking Lines"
             trigger OnAfterAction()
             var
                 ILE: Record 32;
+                SerialNoInfo: Record "Serial No. Information";
             begin
                 ILE.RESET;
                 ILE.SETRANGE("Lot No.", Rec."Lot No.");
@@ -73,6 +84,13 @@ pageextension 50202 ItemTrackingLinesExt extends "Item Tracking Lines"
                     Rec."Back Pack/Display" := ILE."Back Pack/Display";
                     Rec.Modify();
                 END;
+
+                SerialNoInfo.Reset();
+                SerialNoInfo.SetRange("Item No.", Rec."Item No.");
+                SerialNoInfo.SetRange("Serial No.", Rec."Serial No.");
+                IF SerialNoInfo.FindFirst() then
+                    Rec."Back Pack Dispaly" := SerialNoInfo."Back Pack Dispaly";
+                Rec.Modify();
             end;
         }
     }
