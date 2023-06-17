@@ -11,10 +11,7 @@ tableextension 50207 Item_Status extends Item
         {
             DataClassification = ToBeClassified;
         }
-        field(50303; Demo; Boolean)
-        {
-            DataClassification = ToBeClassified;
-        }
+
     }
 
     var

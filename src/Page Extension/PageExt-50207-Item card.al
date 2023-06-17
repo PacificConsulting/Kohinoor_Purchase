@@ -13,11 +13,7 @@ pageextension 50207 "Item card" extends "Item Card"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the EAN Code field.';
             }
-            field(Demo; Rec.Demo)
-            {
-                ApplicationArea = All;
-                ToolTip = 'Specifies the value of the Demo field.';
-            }
+           
 
         }
     }

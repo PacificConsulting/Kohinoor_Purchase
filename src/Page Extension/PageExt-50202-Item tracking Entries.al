@@ -4,11 +4,6 @@ pageextension 50202 ItemTrackingLinesExt extends "Item Tracking Lines"
     {
         addafter("Lot No.")
         {
-            field("Back Pack/Display"; Rec."Back Pack/Display")
-            {
-                ApplicationArea = All;
-
-            }
             field("Back Pack Dispaly"; Rec."Back Pack Dispaly")
             {
                 ApplicationArea = all;
@@ -18,9 +13,6 @@ pageextension 50202 ItemTrackingLinesExt extends "Item Tracking Lines"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of the Posting Date field.';
             }
-
-
-
 
         }
         modify("Warranty Date")
@@ -61,6 +53,7 @@ pageextension 50202 ItemTrackingLinesExt extends "Item Tracking Lines"
                 if ILE.FindFirst() then
                     Rec."Back Pack/Display" := ILE."Back Pack/Display";
                 CurrPage.SaveRecord();
+
 
                 //PCPL-0070 << END
             end;

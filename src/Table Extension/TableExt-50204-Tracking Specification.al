@@ -6,10 +6,13 @@ tableextension 50204 TrackSpecExt extends "Tracking Specification"
         {
             OptionMembers = " ",Backpack,Display;
             OptionCaption = ' ,Backpack,Display';
+            Enabled = false;
         }
-        field(50202; "Back Pack Dispaly"; TExt[10])
+        field(50202; "Back Pack Dispaly"; Option)
         {
             DataClassification = ToBeClassified;
+            OptionMembers = Backpack,Display;
+            OptionCaption = 'Backpack,Display';
         }
         field(50203; "Posting Date"; Date)
         {
@@ -29,7 +32,16 @@ tableextension 50204 TrackSpecExt extends "Tracking Specification"
             trigger OnAfterValidate()
             var
                 SerialNoInfo: Record "Serial No. Information";
+                Res: Record 337;
             begin
+                res.Reset();
+                Res.SetRange("Serial No.", "Serial No.");
+                if Res.FindFirst() then
+                    Error('Serial No. is duplicate');
+
+                // IF (Rec."Source Type" = 39) and (rec."Source Subtype" = 1) then
+                //   Rec."Back Pack Dispaly" := Rec."Back Pack Dispaly"::Backpack;
+
                 SerialNoInfo.Reset();
                 SerialNoInfo.SetRange("Item No.", Rec."Item No.");
                 SerialNoInfo.SetRange("Serial No.", Rec."Serial No.");

@@ -58,7 +58,10 @@ codeunit 50202 Events
     //<<<<<START********************************CU-6500*****************************************
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Tracking Management", 'OnAfterCreateSNInformation', '', false, false)]
     local procedure OnAfterCreateSNInformation(var SerialNoInfo: Record "Serial No. Information"; TrackingSpecification: Record "Tracking Specification")
+    var
+        Res: Record "Reservation Entry";
     begin
+
         SerialNoInfo."Back Pack Dispaly" := TrackingSpecification."Back Pack Dispaly";
     end;
     //<<<<<END********************************CU-6500*****************************************
@@ -69,6 +72,7 @@ codeunit 50202 Events
     begin
         ReservEntry."Back Pack/Display" := OldTrackingSpecification."Back Pack/Display";
         ReservEntry.Modify();
+        TrackingSpecification."Back Pack Dispaly" := OldTrackingSpecification."Back Pack Dispaly"
 
     end;
 
@@ -84,6 +88,7 @@ codeunit 50202 Events
             DestTrkgSpec."Back Pack Dispaly" := SerialNoInfo."Back Pack Dispaly";
 
         DestTrkgSpec."Back Pack/Display" := SourceTrackingSpec."Back Pack/Display";
+        DestTrkgSpec."Back Pack Dispaly" := SourceTrackingSpec."Back Pack Dispaly";
 
     end;
 

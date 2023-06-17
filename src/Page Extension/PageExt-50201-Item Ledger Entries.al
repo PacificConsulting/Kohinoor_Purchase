@@ -8,6 +8,12 @@ pageextension 50201 ItemLedgerEntriesExt extends "Item Ledger Entries"
             {
                 ApplicationArea = All;
             }
+            field("Vendor Model No."; Rec."Vendor Model No.")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Vendor Model No. field.';
+            }
+            
         }
     }
 
