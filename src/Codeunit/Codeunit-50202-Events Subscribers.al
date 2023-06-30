@@ -6,6 +6,17 @@ codeunit 50202 Events
     end;
 
 
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Activity-Post", 'OnPostSourceDocumentOnBeforePurchPostRun', '', false, false)]
+    local procedure OnPostSourceDocumentOnBeforePurchPostRun(WarehouseActivityHeader: Record "Warehouse Activity Header"; var PurchaseHeader: Record "Purchase Header");
+    begin
+        PurchaseHeader."LR No." := WarehouseActivityHeader."LR No.";
+        PurchaseHeader."LR Date" := WarehouseActivityHeader."LR Date";
+        PurchaseHeader."Vehicle No." := WarehouseActivityHeader."Vehicle No.";
+        PurchaseHeader."Vendor Invoice No." := WarehouseActivityHeader."External Document No.2";
+        PurchaseHeader.Modify();
+    end;
+
     //<<<<<<<START********************************CU-90*****************************************
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostItemJnlLineCopyProdOrder', '', false, false)]
     local procedure OnAfterPostItemJnlLineCopyProdOrder(var ItemJnlLine: Record "Item Journal Line"; PurchLine: Record "Purchase Line"; PurchRcptHeader: Record "Purch. Rcpt. Header"; QtyToBeReceived: Decimal; CommitIsSupressed: Boolean; QtyToBeInvoiced: Decimal)
@@ -60,9 +71,15 @@ codeunit 50202 Events
     local procedure OnAfterCreateSNInformation(var SerialNoInfo: Record "Serial No. Information"; TrackingSpecification: Record "Tracking Specification")
     var
         Res: Record "Reservation Entry";
+        PH: Record "Purchase Header";
     begin
-
         SerialNoInfo."Back Pack Dispaly" := TrackingSpecification."Back Pack Dispaly";
+        PH.Reset();
+        PH.SetRange("No.", TrackingSpecification."Source ID");
+        IF PH.FindFirst() then begin
+            SerialNoInfo."Inward Date" := PH."Posting Date";
+        end;
+        SerialNoInfo.Modify();
     end;
     //<<<<<END********************************CU-6500*****************************************
 

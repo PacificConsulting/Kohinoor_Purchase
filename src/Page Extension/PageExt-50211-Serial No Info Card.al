@@ -8,6 +8,11 @@ pageextension 50211 "Serial No. Info Card" extends "Serial No. Information Card"
             {
                 ApplicationArea = ALL;
             }
+            field("Inward Date"; Rec."Inward Date")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Inward Date field.';
+            }
         }
     }
 }

@@ -34,10 +34,12 @@ tableextension 50204 TrackSpecExt extends "Tracking Specification"
                 SerialNoInfo: Record "Serial No. Information";
                 Res: Record 337;
             begin
-                res.Reset();
-                Res.SetRange("Serial No.", "Serial No.");
-                if Res.FindFirst() then
-                    Error('Serial No. is duplicate');
+                IF (Rec."Source Type" = 39) and (rec."Source Subtype" = 1) then begin
+                    Res.Reset();
+                    Res.SetRange("Serial No.", "Serial No.");
+                    if Res.FindFirst() then
+                        Error('Serial No. is duplicate');
+                end;
 
                 // IF (Rec."Source Type" = 39) and (rec."Source Subtype" = 1) then
                 //   Rec."Back Pack Dispaly" := Rec."Back Pack Dispaly"::Backpack;

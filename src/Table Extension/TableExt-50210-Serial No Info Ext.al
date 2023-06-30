@@ -7,5 +7,9 @@ tableextension 50210 "Serial No. Info Ext" extends "Serial No. Information"
             OptionMembers = Backpack,Display;
             OptionCaption = 'Backpack,Display';
         }
+        field(50202; "Inward Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 }
