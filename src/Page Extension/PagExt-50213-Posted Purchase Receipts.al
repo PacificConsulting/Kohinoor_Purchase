@@ -8,6 +8,10 @@ pageextension 50213 "Posted Purchase Receipts" extends "Posted Purchase Receipts
             {
                 ApplicationArea = all;
             }
+            field("LR Date"; Rec."LR Date")
+            {
+                ApplicationArea = all;
+            }
         }
 
     }

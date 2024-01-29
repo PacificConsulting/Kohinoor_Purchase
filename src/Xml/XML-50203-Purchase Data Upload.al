@@ -73,6 +73,7 @@ xmlport 50203 "Purchase Document Upload"
                     PurchaseHeader.SETRANGE("Document Type", DocType);
                     PurchaseHeader.SETRANGE("No.", DocNo);
                     PurchaseHeader.SetRange("Location Code", LocationCode);
+                    PurchaseHeader.SetRange("Vendor Invoice No.", VendorInvNo);
                     IF NOT PurchaseHeader.FINDFIRST THEN BEGIN
                         PurchaseHeader.INIT;
                         PurchaseHeader.VALIDATE(PurchaseHeader."Document Type", DocType);
@@ -103,6 +104,7 @@ xmlport 50203 "Purchase Document Upload"
                         PurchaseHeader.VALIDATE(PurchaseHeader."Posting Date", PostDate);
                         PurchaseHeader.Validate("Payment Terms Code", PayemntCode);
                         PurchaseHeader.validate("Vendor Invoice No.", VendorInvNo);
+                        PurchaseHeader.validate("Vendor Cr. Memo No.", VendorInvNo);
                         EVALUATE(DocDate, VendorInvDate);
                         PurchaseHeader.validate("Document Date", DocDate);
                         PurchaseHeader.VALIDATE(PurchaseHeader."Location Code", LocationCode);
@@ -123,16 +125,17 @@ xmlport 50203 "Purchase Document Upload"
                         PurchaseLine."Document No." := PurchaseHeader."No.";
                         PurchaseLine."Line No." := Linenumber;
                         PurchaseLine.INSERT(TRUE);
-                        PurchaseLine.VALIDATE(PurchaseLine."Location Code", PurchaseHeader."Location Code");
                         Evaluate(ItemType, type1);
                         PurchaseLine.Validate(Type, ItemType);
                         PurchaseLine.VALIDATE(PurchaseLine."No.", ItemNo);
+                        PurchaseLine.VALIDATE(PurchaseLine."Location Code", PurchaseHeader."Location Code");
                         EVALUATE(Qty, Quantity);
                         PurchaseLine.VALIDATE(PurchaseLine.Quantity, Qty);
                         //PurchaseLine.VALIDATE("Unit of Measure", UOM);
                         EVALUATE(DirectUnitCostValue, DirectUnitCost);
                         PurchaseLine.Validate("GST Group Code", GSTGroupCode);
                         PurchaseLine.Validate("HSN/SAC Code", HSNCode);
+                        PurchaseLine.Validate("GST Credit", PurchaseLine."GST Credit"::Availment);
                         PurchaseLine.Validate("TDS Section Code", TDSSection);
                         PurchaseLine.VALIDATE("Direct Unit Cost", DirectUnitCostValue);
                         PurchaseLine.VALIDATE("Shortcut Dimension 1 Code", PurchaseHeader."Shortcut Dimension 1 Code");
@@ -151,9 +154,9 @@ xmlport 50203 "Purchase Document Upload"
                         PurchaseLine."Document No." := PurchaseHeader."No.";
                         PurchaseLine."Line No." := Linenumber;
                         PurchaseLine.INSERT(TRUE);
-                        PurchaseLine.VALIDATE(PurchaseLine."Location Code", PurchaseHeader."Location Code");
                         PurchaseLine.Validate(Type, ItemType);
                         PurchaseLine.VALIDATE(PurchaseLine."No.", ItemNo);
+                        PurchaseLine.VALIDATE(PurchaseLine."Location Code", PurchaseHeader."Location Code");
                         EVALUATE(Qty, Quantity);
                         PurchaseLine.VALIDATE(PurchaseLine.Quantity, Qty);
 

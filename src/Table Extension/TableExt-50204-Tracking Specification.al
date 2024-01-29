@@ -24,7 +24,7 @@ tableextension 50204 TrackSpecExt extends "Tracking Specification"
         {
             trigger OnAfterValidate()
             begin
-                InitSellStatus();
+                // InitSellStatus();
             end;
         }
         modify("Serial No.")
